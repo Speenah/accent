@@ -2,7 +2,9 @@ import Config
 
 config :accent, Accent.Repo,
   pool: Ecto.Adapters.SQL.Sandbox,
-  url: System.get_env("DATABASE_URL") || "postgres://localhost/accent_test"
+  url: System.get_env("DATABASE_URL") || "postgres://localhost/accent_test",
+  password: "postgres",
+  username: "postgres"
 
 config :accent, hook_github_file_server: Accent.Hook.Inbounds.GitHub.FileServerMock
 
