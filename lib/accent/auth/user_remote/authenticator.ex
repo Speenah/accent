@@ -1,15 +1,15 @@
 defmodule Accent.UserRemote.Authenticator do
   alias Accent.UserRemote.{CollaboratorNormalizer, Persister, TokenGiver, User}
 
-  def authenticate(%{provider: provider, info: info}) do
+  def authenticate(%{provider: provider, info: info, extra: extra}) do
     info
-    |> map_user(provider)
+    |> map_user(provider, extra)
     |> Persister.persist()
     |> CollaboratorNormalizer.normalize()
     |> TokenGiver.grant_token()
   end
 
-  defp map_user(info, :dummy) do
+  defp map_user(info, :dummy, _) do
     %User{
       provider: "dummy",
       fullname: info.email,
@@ -18,13 +18,13 @@ defmodule Accent.UserRemote.Authenticator do
     }
   end
 
-  defp map_user(info, provider) do
+  defp map_user(info, :discord, %{raw_info: %{user: user}}) do
     %User{
-      provider: to_string(provider),
-      fullname: info.name,
+      provider: "discord",
+      fullname: user["username"] <> "#" <> user["discriminator"],
       picture_url: info.image,
-      email: normalize_email(info.email),
-      uid: normalize_email(info.email)
+      email: user["id"] <> "@fake-discord-email.com",
+      uid: user["id"]
     }
   end
 
