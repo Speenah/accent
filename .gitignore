@@ -43,3 +43,7 @@ cli/*-debug.log
 cli/*-error.log
 cli/.oclif.manifest.json
 .elixir_ls
+
+# IntelliJ
+.idea/
+*.iml
