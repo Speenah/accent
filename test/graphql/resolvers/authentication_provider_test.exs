@@ -6,6 +6,6 @@ defmodule AccentTest.GraphQL.Resolvers.AuthenticationProvider do
   test "list providers" do
     {:ok, providers} = Resolver.list(nil, %{}, %{})
 
-    assert providers === [%{id: :dummy}]
+    assert providers === [%{id: :dummy}, %{id: :discord}]
   end
 end
