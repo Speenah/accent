@@ -12,7 +12,7 @@ defmodule AccentTest.UserRemote.Authenticator do
   }
 
   test "grant token new user" do
-    {:ok, token} = Authenticator.authenticate(%{provider: :dummy, info: %{email: "test@example.com"}})
+    {:ok, token} = Authenticator.authenticate(%{provider: :dummy, info: %{email: "test@example.com"}, extra: %{}})
     user = Repo.get_by(User, email: "test@example.com")
 
     assert user.email == "test@example.com"
@@ -20,8 +20,8 @@ defmodule AccentTest.UserRemote.Authenticator do
   end
 
   test "grant token existing user" do
-    {:ok, _token} = Authenticator.authenticate(%{provider: :dummy, info: %{email: "test@example.com"}})
-    {:ok, _token} = Authenticator.authenticate(%{provider: :dummy, info: %{email: "test@example.com"}})
+    {:ok, _token} = Authenticator.authenticate(%{provider: :dummy, info: %{email: "test@example.com"}, extra: %{}})
+    {:ok, _token} = Authenticator.authenticate(%{provider: :dummy, info: %{email: "test@example.com"}, extra: %{}})
 
     assert Repo.get_by(User, email: "test@example.com")
   end
@@ -32,7 +32,7 @@ defmodule AccentTest.UserRemote.Authenticator do
     project = %Project{main_color: "#f00", name: "My project", language_id: language.id} |> Repo.insert!()
     collaborator = %Collaborator{project_id: project.id, role: "admin", assigner_id: assigner.id, email: "test@example.com"} |> Repo.insert!()
 
-    {:ok, _token} = Authenticator.authenticate(%{provider: :dummy, info: %{email: "test@example.com"}})
+    {:ok, _token} = Authenticator.authenticate(%{provider: :dummy, info: %{email: "test@example.com"}, extra: %{}})
     user = Repo.get_by(User, email: "test@example.com")
     updated_collaborator = Repo.get(Collaborator, collaborator.id)
 
@@ -45,7 +45,7 @@ defmodule AccentTest.UserRemote.Authenticator do
     project = %Project{main_color: "#f00", name: "My project", language_id: language.id} |> Repo.insert!()
     collaborator = %Collaborator{project_id: project.id, role: "admin", assigner_id: assigner.id, email: "test@example.com"} |> Repo.insert!()
 
-    {:ok, _token} = Authenticator.authenticate(%{provider: :dummy, info: %{email: "TeSt@eXamPle.com"}})
+    {:ok, _token} = Authenticator.authenticate(%{provider: :dummy, info: %{email: "TeSt@eXamPle.com"}, extra: %{}})
     user = Repo.get_by(User, email: "test@example.com")
     updated_collaborator = Repo.get(Collaborator, collaborator.id)
 

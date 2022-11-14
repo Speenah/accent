@@ -12,7 +12,7 @@ defmodule AccentTest.AuthenticationController do
   test "create responds with valid dummy params", %{conn: conn} do
     conn =
       conn
-      |> assign(:ueberauth_auth, %{provider: :dummy, info: %{email: "dummy@test.com"}})
+      |> assign(:ueberauth_auth, %{provider: :dummy, info: %{email: "dummy@test.com"}, extra: %{}})
       |> AuthController.callback(nil)
 
     user = Repo.get_by(User, email: "dummy@test.com")
@@ -23,15 +23,22 @@ defmodule AccentTest.AuthenticationController do
     assert redirected_to(conn, 302) =~ "/?token=#{token.token}"
   end
 
-  test "create responds with valid google params", %{conn: conn} do
+  test "create responds with valid discord params", %{conn: conn} do
     conn =
       conn
-      |> assign(:ueberauth_auth, %{provider: :google, info: %{name: "Dummy", email: "dummy@test.com", image: nil}})
+      |> assign(
+        :ueberauth_auth,
+        %{
+          provider: :discord,
+          info: %{name: "Dummy", email: "dummy@test.com", image: ""},
+          extra: %{raw_info: %{user: %{id: "1", username: "Dummy", discriminator: "0000"}}}
+        }
+      )
       |> AuthController.callback(nil)
 
-    user = Repo.get_by(User, email: "dummy@test.com")
+    user = Repo.get_by(User, email: "1@fake-discord-email.com")
     token = Repo.get_by(AccessToken, user_id: user.id, global: false)
-    assert user.fullname === "Dummy"
+    assert user.fullname === "Dummy#0000"
     assert redirected_to(conn, 302) =~ "/?token=#{token.token}"
   end
 end

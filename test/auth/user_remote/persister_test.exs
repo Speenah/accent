@@ -7,13 +7,13 @@ defmodule AccentTest.UserRemote.Persister do
   alias Accent.UserRemote.Persister
   alias Accent.UserRemote.User, as: UserFromFetcher
 
-  @user %UserFromFetcher{email: "test@test.com", provider: "google", uid: "1234"}
+  @user %UserFromFetcher{email: "test@test.com", provider: "discord", uid: "1234"}
 
   test "persist with new user" do
     user = Persister.persist(@user)
 
     assert user.id === Repo.get_by!(User, email: "test@test.com").id
-    assert Repo.get_by!(AuthProvider, uid: "1234", name: "google", user_id: user.id)
+    assert Repo.get_by!(AuthProvider, uid: "1234", name: "discord", user_id: user.id)
   end
 
   test "persist with existing user existing provider" do
@@ -33,6 +33,6 @@ defmodule AccentTest.UserRemote.Persister do
     user = Persister.persist(@user)
 
     assert user.id === existing_user.id
-    assert Repo.get_by!(AuthProvider, uid: "1234", name: "google", user_id: user.id)
+    assert Repo.get_by!(AuthProvider, uid: "1234", name: "discord", user_id: user.id)
   end
 end
